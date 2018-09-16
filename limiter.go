@@ -94,7 +94,7 @@ func New(redis *redis.Client) *Limiter {
 
 // Check will perform the rate limit check. Specify burst as the maximum tokens
 // available and rate as the regeneration of tokens per period.
-func (l *Limiter) Check(id string, burst, rate, cost int64, period time.Duration) (Result, error) {
+func (l *Limiter) Check(key string, burst, rate, cost int64, period time.Duration) (Result, error) {
 	// prepare result
 	var res Result
 
@@ -109,7 +109,7 @@ func (l *Limiter) Check(id string, burst, rate, cost int64, period time.Duration
 	}
 
 	// run script
-	data, err := gcraScript.Run(l.redis, []string{id}, time.Now().Unix(), burst, rate, int64(period.Seconds()), cost).Result()
+	data, err := gcraScript.Run(l.redis, []string{key}, time.Now().Unix(), burst, rate, int64(period.Seconds()), cost).Result()
 	if err != nil {
 		return res, err
 	}
