@@ -2,6 +2,7 @@ package gcra
 
 import (
 	"fmt"
+	"io"
 	"testing"
 	"time"
 
@@ -108,6 +109,14 @@ func TestLimiterErrors(t *testing.T) {
 
 	r, err = l.Check("gcra", burst, rate, burst+1, period)
 	assert.Equal(t, ErrCostHigherThanBurst, err)
+	assert.Equal(t, Result{}, r)
+}
+
+func TestRedisErrors(t *testing.T) {
+	l := New(redis.NewClient(&redis.Options{Addr: "localhost:1234"}))
+
+	r, err := l.Check("gcra", 10, 1, 1, time.Second)
+	assert.Equal(t, io.EOF, err)
 	assert.Equal(t, Result{}, r)
 }
 
