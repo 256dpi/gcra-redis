@@ -128,7 +128,7 @@ func BenchmarkLimiter(b *testing.B) {
 	l := New(client)
 
 	for i := 0; i < b.N; i++ {
-		_, err := l.Check("gcra", int64(b.N), 10, 1, 10 * time.Second)
+		_, err := l.Check("gcra", int64(b.N), 10, 1, 10*time.Second)
 		if err != nil {
 			panic(err)
 		}
